@@ -15,12 +15,32 @@ class AdminProductController extends Controller
         return view('admin.products', compact('products'));
     }
 
-    public function edit() {
-        return view('admin.products_edit');
+    public function edit(Product $product) {
+        return view('admin.products_edit', [
+            'product' => $product
+        ]);
     }
 
-    public function update() {
-        return view();
+    public function update(Product $product, Request $request) {
+
+        $input = $request->validate([
+            'name' => 'string|required',
+            'price' => 'string|required',
+            'stock' => 'int|nullable',
+            'cover' => 'file|nullable',
+            'description' => 'string|nullable'
+        ]);
+
+        if (!empty($input['cover']) && $input['cover']->isValid()) {
+            $file = $input['cover'];
+            $path = $file->store('public/products');
+            $input['cover'] = $path;
+        }
+
+        $product->fill($input);
+        $product->save();
+
+        return Redirect::route('admin.products');
     }
 
     public function create() {
@@ -31,7 +51,7 @@ class AdminProductController extends Controller
 
         $input = $request->validate([
             'name' => 'string|required',
-            'price' => 'int|required',
+            'price' => 'string|required',
             'stock' => 'int|nullable',
             'cover' => 'file|nullable',
             'description' => 'string|nullable'

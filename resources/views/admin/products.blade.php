@@ -21,11 +21,10 @@
                     </thead>
                     <tbody class="divide-y">
                     @foreach($products as $product )
-                    {{ dd($products) }}
                     <tr @if($loop->even) class="bg-gray-100" @endif>
                         <td class="px-4 py-3">{{ $product->id }}</td>
                         <td class="px-4 py-3">
-                            <img alt="ecommerce" class="object-cover object-center w-full h-full block" src="{{ $product->cover }}">
+                            <img alt="ecommerce" class="object-cover object-center w-full h-full block" src="{{ \Illuminate\Support\Facades\Storage::url($product->cover) }}">
                         </td>
                         <td class="px-4 py-3">{{ $product->name }}</td>
                         <td class="px-4 py-3">{{ $product->price }}</td>
